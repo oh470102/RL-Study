@@ -65,17 +65,11 @@ def train_model():
                 q_max = torch.max(q_new)
             
             Y = reward + gamma * q_max if reward == -1 else reward
-            Y = torch.Tensor([Y]).detach().float()           # 여기서 Y는 상수(TD-target)이므로 기울기 계산 X
+            Y = torch.Tensor([Y]).detach().float().squeeze()          # 여기서 Y는 상수(TD-target)이므로 기울기 계산 X
             X = q.squeeze()[action]  
-            # X = torch.Tensor([X])
-            # X.requires_grad_(True) 이렇게 하면 훈련이 잘 안되네용...
-
+            
             print(f"X is {X} with type {type(X)}")
             print(f"Y is {Y} with type {type(Y)}") 
-
-            # X = torch.Tensor([X]).float()  THIS CAUSES ERROR
-            # X.requires_grad_(True)
-            # print(X)   # 여기서 X는 기존 Q 값, target 방향으로 학습 해야함
 
             # BACKPROPAGATION
             loss = loss_fn(X, Y)
@@ -85,8 +79,6 @@ def train_model():
             optimizer.step()
 
             if epsilon > 0.1: epsilon -= (1/epochs)
-
-           
 
     return model
 

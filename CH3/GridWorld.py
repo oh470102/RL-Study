@@ -79,19 +79,22 @@ class GridWorld:
 
     def render_np(self):
         board_np = np.zeros((4,4,4))
-
+        items = ['P', '+', '-', 'W']
+        pos = []
         #1 and 0 indicate axis number
-        player1, player0 = np.where(self.board=='P')[0].item(), np.where(self.board=='P')[1].item()
-        wall1, wall0 = np.where(self.board=='W')[0].item(), np.where(self.board=='W')[1].item()
-        plus1, plus0 = np.where(self.board=='+')[0].item(), np.where(self.board=='+')[1].item()
-        minus1, minus0 = np.where(self.board=='-')[0].item(), np.where(self.board=='-')[1].item()
 
+        for item in items:
+            try:
+                p1, p0 = np.where(self.board==item)[0].item(), np.where(self.board==item)[1].item()
+            except:
+                p1 = p0 = None
+            pos.append((p1, p0))
+            
         # REMEMBER: (axis 2, axis 1, axis 0)
         # 앞에서부터, (플레이어, 목표, 구덩이, 벽)
-        board_np[0, player1, player0] = 1
-        board_np[3, wall1, wall0] = 1
-        board_np[1, plus1, plus0] = 1
-        board_np[2, minus1, minus0] = 1
+        for i, (p1, p0) in enumerate(pos, start=0):
+            if (p1, p0) == (None, None):
+                board_np[i, p1, p0] = 1 
 
         return board_np
 

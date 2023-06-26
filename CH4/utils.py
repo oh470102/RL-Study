@@ -1,6 +1,10 @@
 import numpy as np
 import torch
 
+def matplotlib_error():
+    import os
+    os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
+
 def moving_average(array, window_size, reg=None):
     moving_averages = []
     for i in range(len(array) - window_size + 1):

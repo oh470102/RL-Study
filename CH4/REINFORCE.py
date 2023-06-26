@@ -7,6 +7,9 @@ import torch
 import gym
 import matplotlib.pyplot as plt
 
+### RESOLVE MATPLOTLIB ERROR
+matplotlib_error()
+
 ### HYPERPARAMS
 MAX_EPISODES = int(input("EPOCHS(MAX EPISODES)?: "))
 MAX_DURATION = int(input("SET DURATION LENGTH TO?: "))
@@ -19,17 +22,19 @@ optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 loss_fn = lambda preds, discG: -1 * torch.sum(discG * torch.log(preds))
 
 ### TRAINING
+scores = []
+losses = []
 def train_model():
     env = gym.make('CartPole-v1')
+    global scores, losses
 
     for episode in range(MAX_EPISODES):
 
-        print(f"currently on episode {episode}")
+        print(f"currently on episode {episode}/{MAX_EPISODES}")
 
         curr_state, info = env.reset()
         done = False
         transitions = []
-        scores = []
         i = 0
 
         while not done:
@@ -55,6 +60,7 @@ def train_model():
         prob_batch = pred_batch.gather(dim=1, index=action_batch.long().view(-1, 1)).squeeze()  # action_batch()를 2차원 배열로 만들고, 세로로 나열하기. 1->2로 됐기 때문에 squeeze 해주고
 
         loss = loss_fn(prob_batch, disc_returns.detach())
+        losses.append(loss.item())
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
@@ -68,7 +74,7 @@ def test_model(model):
     env.render()
     done = False
 
-    while not done:
+    for i in range(0, MAX_DURATION):
         action_prob_dist = model(torch.from_numpy(curr_state).float())
         action = np.random.choice(np.array([0,1]), p=action_prob_dist.detach().numpy())
         next_state, reward, done, _, _ = env.step(action)
@@ -77,5 +83,12 @@ def test_model(model):
         if done: break
 
 trained_model, scores = train_model()
-test_model(trained_model); print(scores)
+test_model(trained_model)
+print(scores)
+
+plt.plot(moving_average(scores, 50, reg=False))
+plt.show()
+        
+plt.plot(moving_average(losses, 50, reg=False))
+plt.show()
         

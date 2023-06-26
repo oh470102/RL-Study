@@ -1,3 +1,6 @@
-import os
+import gym
 
-os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
+env = gym.make('CartPole-v1')
+env.reset()
+
+print(env.env.state)

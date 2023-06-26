@@ -41,12 +41,12 @@ def update_params(worker_opt, values, logprobs, rewards, clc=0.1, gamma=0.95):
     return actor_loss, critic_loss, len(rewards)
 
 def run_episode(worker_env, worker_model):
-    state = torch.from_numpy(worker_env.env.state).float()
+    state = torch.from_numpy(np.array(worker_env.env.state)).float()
     values, logprobs, rewards = [], [], []
     done = False
     j = 0
 
-    while done is False:
+    while j < 250:
         j += 1
         policy, value = worker_model(state)
         values.append(value)
@@ -58,7 +58,6 @@ def run_episode(worker_env, worker_model):
         next_state, _, done, _, _ = worker_env.step(action.detach().numpy())
         state = torch.from_numpy(next_state).float()
 
-        if j > 250: done = True
         if done:
             reward = -10
             worker_env.reset()

@@ -2,6 +2,7 @@
 ### 이를 N-step 기법을 통해 완화하는 편이며 실제로 큰 효과가 있는 듯 하다.
 
 ### TODO: FIX MULTIPROCESSING DEADLOCK ERROR
+###     : Implement & study n-step A3C
 
 from Model import ActorCritic
 from A3C_utils import *

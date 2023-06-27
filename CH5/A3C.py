@@ -2,6 +2,7 @@
 ### 이를 N-step 기법을 통해 완화하는 편이며 실제로 큰 효과가 있는 듯 하다.
 
 ### NOTE: Deadlock happens when calling p.join() before emptying queue.
+### queue에서 item을 다 retrieve하고 join()해야 정상적으로 작동한다.
 
 from Model import ActorCritic
 from A3C_utils import *

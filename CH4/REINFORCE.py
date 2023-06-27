@@ -1,4 +1,5 @@
 ### NOTE ::: REINFORCE IS A MC(MONTE-CARLO) ALGORITHM, NOT TD, SO IS UPDATED AFTER EVERY EPISODE
+### 
 
 from Model import Model
 from utils import *

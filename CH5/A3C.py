@@ -1,8 +1,7 @@
 ### A3C 는 MC로 사용했을 땐 분산이 크고 학습 과정에 많은 fluctuation이 있다
 ### 이를 N-step 기법을 통해 완화하는 편이며 실제로 큰 효과가 있는 듯 하다.
 
-### TODO: FIX MULTIPROCESSING DEADLOCK ERROR
-###     : Implement & study n-step A3C
+### NOTE: Deadlock happens when calling p.join() before emptying queue.
 
 from Model import ActorCritic
 from A3C_utils import *
@@ -20,21 +19,23 @@ MasterNode = ActorCritic()
 MasterNode.share_memory()
 processes = []
 queue = mp.Queue()
-epochs, n_workers = 600, 3
+epochs, n_workers = 1000, 5
 params = {'epochs': epochs, 'n_workers': n_workers}
 counter = mp.Value('i', 0)  # 'i' indicates integer type
 
 def train_model():
 
     global processes
+    scores = []
 
     for i in range(params['n_workers']):
         p = mp.Process(target=worker, args=(i, MasterNode, counter, params, queue))
         p.start()
         processes.append(p)
 
-    scores = []
-    while not queue.empty():
+    count = 0
+    while count < n_workers * epochs:
+        count += 1
         scores.append(queue.get())
 
     for p in processes:

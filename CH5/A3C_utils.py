@@ -46,7 +46,7 @@ def run_episode(worker_env, worker_model):
     done = False
     j = 0
 
-    while j < 250:
+    while j < 250 and not done:
         j += 1
         policy, value = worker_model(state)
         values.append(value)

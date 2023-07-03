@@ -11,7 +11,7 @@ import copy
 ### HYPERPARAMS
 loss_fn = torch.nn.MSELoss()
 learning_rate = 1e-3
-gamma = 0.9
+gamma = 0.91
 epsilon = 1.0
 mem_size = 5000
 batch_size = 200

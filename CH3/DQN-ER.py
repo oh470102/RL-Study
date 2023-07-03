@@ -65,6 +65,9 @@ def train_model():
                 state2_batch = torch.cat([s2 for (s1, a, r, s2, d) in minibatch])
                 done_batch = torch.Tensor([d for (s1, a, r, s2, d) in minibatch])
 
+                print(state_batch.size())
+                break
+
                 q = model(state_batch)
                 with torch.no_grad():
                     q_next = model(state2_batch)
